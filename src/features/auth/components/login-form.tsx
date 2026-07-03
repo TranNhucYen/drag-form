@@ -1,24 +1,17 @@
 "use client"
 
-import * as React from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { ROUTES } from "@/shared/constants/routes"
 
 export function LoginForm() {
   const router = useRouter()
-  const [email, setEmail] = React.useState("")
-  const [password, setPassword] = React.useState("")
-  const [isLoading, setIsLoading] = React.useState(false)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setTimeout(() => {
-      router.push("/home")
-    }, 1000)
-  }
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -27,7 +20,7 @@ export function LoginForm() {
           <h1 className="text-2xl font-bold tracking-tight">Đăng nhập</h1>
           <p className="text-sm text-muted-foreground">Nhập email và mật khẩu của bạn để tiếp tục</p>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
           <div className="space-y-3">
             <div className="space-y-1.5">
               <label className="text-sm font-medium">Email</label>
@@ -68,7 +61,7 @@ export function LoginForm() {
         </Button>
         <div className="text-center text-sm text-muted-foreground">
           Chưa có tài khoản?{" "}
-          <Link href="/register" className="font-semibold text-primary hover:underline">Đăng ký</Link>
+          <Link href={ROUTES.REGISTER} className="font-semibold text-primary hover:underline">Đăng ký</Link>
         </div>
       </div>
     </div>

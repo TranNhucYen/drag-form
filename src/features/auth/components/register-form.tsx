@@ -1,25 +1,18 @@
 "use client"
 
-import * as React from "react"
+import { useState, type FormEvent } from 'react'
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { ROUTES } from "@/shared/constants/routes"
 
 export function RegisterForm() {
   const router = useRouter()
-  const [name, setName] = React.useState("")
-  const [email, setEmail] = React.useState("")
-  const [password, setPassword] = React.useState("")
-  const [isLoading, setIsLoading] = React.useState(false)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setTimeout(() => {
-      router.push("/login")
-    }, 1000)
-  }
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -28,7 +21,7 @@ export function RegisterForm() {
           <h1 className="text-2xl font-bold tracking-tight">Tạo tài khoản</h1>
           <p className="text-sm text-muted-foreground">Nhập thông tin bên dưới để tạo tài khoản</p>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-4">
           <div className="space-y-3">
             <div className="space-y-1.5">
               <label className="text-sm font-medium">Họ và tên</label>
@@ -77,7 +70,7 @@ export function RegisterForm() {
         </Button>
         <div className="text-center text-sm text-muted-foreground">
           Đã có tài khoản?{" "}
-          <Link href="/login" className="font-semibold text-primary hover:underline">Đăng nhập</Link>
+          <Link href={ROUTES.LOGIN} className="font-semibold text-primary hover:underline">Đăng nhập</Link>
         </div>
       </div>
     </div>
