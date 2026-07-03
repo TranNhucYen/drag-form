@@ -12,56 +12,10 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar"
-import { Home, LayoutTemplate, FileEdit, Globe, Bell, Settings, User,FileText } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-
-const mainNavItems = [
-  {
-    title: "Trang chủ",
-    url: "/home",
-    icon: Home,
-  },
-  {
-    title: "Biểu mẫu của tôi",
-    url: "/my-form",
-    icon: FileText,
-  },
-  {
-    title: "Trình thiết kế",
-    url: "/editor",
-    icon: FileEdit,
-  },
-  {
-    title: "Form mẫu",
-    url: "/templates",
-    icon: LayoutTemplate,
-  },
-  {
-    title: "Kho cộng đồng",
-    url: "/community",
-    icon: Globe,
-  },
-]
-
-const personalNavItems = [
-  {
-    title: "Thông báo",
-    url: "/notifications",
-    icon: Bell,
-  },
-  {
-    title: "Cài đặt",
-    url: "/settings",
-    icon: Settings,
-  },
-  {
-    title: "Tài khoản",
-    url: "/account",
-    icon: User,
-  },
-]
+import { mainNavItems, personalNavItems } from "@/shared/config/nav"
 
 export function AppSidebar() {
   const pathname = usePathname()
