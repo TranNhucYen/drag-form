@@ -3,72 +3,84 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert"
 import { Plus, Search, RefreshCw, AlertCircle, FileQuestion } from "lucide-react"
 import Link from "next/link"
 import { TemplateCard, TemplateCardSkeleton } from "./TemplateCard"
 import { useTemplateList } from "../hooks/useTemplate"
-import { TemplateStatus } from "../types/template.type"
 
 export default function TemplateList() {
   const {
     templates,
+    categories,
     isLoading,
     error,
     searchTerm,
     setSearchTerm,
-    selectedStatus,
-    setSelectedStatus,
+    selectedCategory,
+    setSelectedCategory,
     refetch,
   } = useTemplateList()
 
   return (
     <div className="w-full mx-auto flex flex-col gap-6">
       {/* Header section */}
-      <div className="flex justify-between items-center w-full border-b border-slate-100 pb-4">
+      <div
+        className="flex justify-between items-center w-full
+        border-b border-border pb-4"
+      >
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">Các form mẫu</h1>
+          <h1 className="text-2xl font-bold text-foreground">Các form mẫu</h1>
           <p className="text-muted-foreground text-sm mt-1">
-            Khám phá và sử dụng các mẫu biểu mẫu chuẩn có sẵn.
+            Khám phá và sử dụng các mẫu biểu mẫu chuẩn có sẵn để bắt đầu nhanh chóng.
           </p>
         </div>
         <Link href="/editor">
-          <Button className="cursor-pointer gap-1.5">
-            <Plus className="size-4" />
+          <Button className="cursor-pointer">
+            <Plus data-icon="inline-start" />
             Tạo biểu mẫu mới
           </Button>
         </Link>
       </div>
 
-      {/* Filter and Search section */}
-      <div className="flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
-        {/* Status Tabs */}
+      {/* Filter by Category and Search section */}
+      <div
+        className="flex flex-col md:flex-row gap-4 justify-between
+        items-stretch md:items-center"
+      >
+        {/* Category Tabs */}
         <Tabs
-          value={selectedStatus}
-          onValueChange={setSelectedStatus}
+          value={selectedCategory}
+          onValueChange={setSelectedCategory}
           className="w-full md:w-auto"
         >
-          <TabsList className="grid grid-cols-4 md:flex h-9 bg-slate-100 p-1">
-            <TabsTrigger value="all" className="text-xs">
+          <TabsList className="flex flex-wrap h-auto md:h-9 bg-muted p-1 gap-0.5">
+            <TabsTrigger value="all" className="text-xs cursor-pointer">
               Tất cả
             </TabsTrigger>
-            <TabsTrigger value={TemplateStatus.ACTIVE} className="text-xs">
-              Đang hoạt động
-            </TabsTrigger>
-            <TabsTrigger value={TemplateStatus.DRAFT} className="text-xs">
-              Bản nháp
-            </TabsTrigger>
-            <TabsTrigger value={TemplateStatus.ARCHIVED} className="text-xs">
-              Đã lưu trữ
-            </TabsTrigger>
+            {categories
+              .filter((cat) => cat !== 'all')
+              .map((cat) => (
+                <TabsTrigger
+                  key={cat}
+                  value={cat}
+                  className="text-xs cursor-pointer"
+                >
+                  {cat}
+                </TabsTrigger>
+              ))}
           </TabsList>
         </Tabs>
 
         {/* Search input */}
         <div className="relative w-full md:w-72">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
+          <Search
+            className="absolute left-2.5 top-1/2 -translate-y-1/2
+            size-4 text-muted-foreground"
+          />
           <Input
-            placeholder="Tìm kiếm biểu mẫu..."
-            className="pl-9 h-9 text-xs focus-visible:ring-1 focus-visible:ring-slate-300"
+            placeholder="Tìm kiếm biểu mẫu theo tên hoặc mô tả..."
+            className="pl-9 h-9 text-xs focus-visible:ring-1"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -77,21 +89,24 @@ export default function TemplateList() {
 
       {/* Error state */}
       {error && (
-        <div className="flex items-center justify-between p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+        <Alert variant="destructive" className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <AlertCircle className="size-5 shrink-0" />
-            <span>{error}</span>
+            <AlertCircle />
+            <div>
+              <AlertTitle>Đã có lỗi xảy ra</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </div>
           </div>
           <Button
             variant="outline"
             size="sm"
             onClick={refetch}
-            className="border-red-300 hover:bg-red-100 text-red-700 gap-1.5 cursor-pointer"
+            className="cursor-pointer text-xs shrink-0"
           >
-            <RefreshCw className="size-3.5" />
+            <RefreshCw data-icon="inline-start" />
             Thử lại
           </Button>
-        </div>
+        </Alert>
       )}
 
       {/* Loading state */}
@@ -105,26 +120,19 @@ export default function TemplateList() {
 
       {/* Empty state */}
       {!isLoading && !error && templates.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-16 px-4 border border-dashed border-slate-200 rounded-xl bg-slate-50/50 text-center">
-          <FileQuestion className="size-12 text-slate-300 mb-3" />
-          <h3 className="text-base font-semibold text-slate-700">
+        <div
+          className="flex flex-col items-center justify-center py-16 px-4
+          border border-dashed border-border rounded-xl bg-muted/20 text-center"
+        >
+          <FileQuestion className="size-12 text-muted-foreground/60 mb-3" />
+          <h3 className="text-base font-semibold text-foreground">
             Không tìm thấy biểu mẫu phù hợp
           </h3>
-          <p className="text-sm text-slate-500 mt-1 max-w-sm">
+          <p className="text-sm text-muted-foreground mt-1 max-w-sm">
             {searchTerm
               ? `Không có kết quả nào khớp với "${searchTerm}". Hãy thử từ khóa khác.`
               : "Hiện tại chưa có biểu mẫu nào trong danh mục này."}
           </p>
-          {searchTerm && (
-            <Button
-              variant="outline"
-              size="sm"
-              className="mt-4 text-xs cursor-pointer"
-              onClick={() => setSearchTerm("")}
-            >
-              Xóa tìm kiếm
-            </Button>
-          )}
         </div>
       )}
 

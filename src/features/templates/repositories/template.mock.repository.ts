@@ -30,7 +30,7 @@ const mockData: Template[] = [
     ownerId: 1,
     type: TemplateType.STATIC_FILE,
     pricingType: TemplatePricingType.FREE,
-    status: TemplateStatus.DRAFT,
+    status: TemplateStatus.ACTIVE,
     downloads: 4120,
     guideline: [
       { id: "g1", content: "Điền thông tin ban giám đốc phê duyệt." },
@@ -47,7 +47,7 @@ const mockData: Template[] = [
     ownerId: 2,
     type: TemplateType.STATIC_FILE,
     pricingType: TemplatePricingType.FREE,
-    status: TemplateStatus.DRAFT,
+    status: TemplateStatus.ACTIVE,
     downloads: 8750,
     createdAt: new Date('2026-06-28'),
     updatedAt: new Date('2026-06-28'),
@@ -73,7 +73,7 @@ const mockData: Template[] = [
     ownerId: 1,
     type: TemplateType.STATIC_FILE,
     pricingType: TemplatePricingType.PAID,
-    status: TemplateStatus.ARCHIVED,
+    status: TemplateStatus.ACTIVE,
     downloads: 1230,
     guideline: [
       { id: "g1", content: "Nhập thông tin cá nhân và số ngày phép năm hiện tại." },

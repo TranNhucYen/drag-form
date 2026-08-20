@@ -10,7 +10,6 @@ export function useTemplateList() {
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState<string>("all")
-  const [selectedStatus, setSelectedStatus] = useState<string>("all")
 
   const fetchTemplates = useCallback(async () => {
     setIsLoading(true)
@@ -44,12 +43,9 @@ export function useTemplateList() {
       const matchesCategory =
         selectedCategory === "all" || template.categoryName === selectedCategory
 
-      const matchesStatus =
-        selectedStatus === "all" || template.status === selectedStatus
-
-      return matchesSearch && matchesCategory && matchesStatus
+      return matchesSearch && matchesCategory
     })
-  }, [data, searchTerm, selectedCategory, selectedStatus])
+  }, [data, searchTerm, selectedCategory])
 
   return {
     templates: filteredTemplates,
@@ -61,8 +57,6 @@ export function useTemplateList() {
     setSearchTerm,
     selectedCategory,
     setSelectedCategory,
-    selectedStatus,
-    setSelectedStatus,
     refetch: fetchTemplates,
   }
 }
