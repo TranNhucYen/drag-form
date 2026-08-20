@@ -17,8 +17,7 @@ import {
 import { Plus, Search, RefreshCw, AlertCircle, FolderOpen } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useMyFormList } from '../hooks/useMyForm'
-import { FormStatus } from '../types/my-form.type'
-import { MyFormDTO } from '../types/my-form.dto'
+import { FormStatus, MyForm } from '../types/my-form.type'
 import { MyFormTable } from './MyFormTable'
 import { CreateFormModal } from './CreateFormModal'
 import { DuplicateFormModal } from './DuplicateFormModal'
@@ -51,10 +50,10 @@ export default function MyFormList() {
 
   // Modals state
   const [createModalOpen, setCreateModalOpen] = useState(false)
-  const [duplicateModalForm, setDuplicateModalForm] = useState<MyFormDTO | null>(null)
-  const [shareModalForm, setShareModalForm] = useState<MyFormDTO | null>(null)
-  const [previewModalForm, setPreviewModalForm] = useState<MyFormDTO | null>(null)
-  const [deleteModalForm, setDeleteModalForm] = useState<MyFormDTO | null>(null)
+  const [duplicateModalForm, setDuplicateModalForm] = useState<MyForm | null>(null)
+  const [shareModalForm, setShareModalForm] = useState<MyForm | null>(null)
+  const [previewModalForm, setPreviewModalForm] = useState<MyForm | null>(null)
+  const [deleteModalForm, setDeleteModalForm] = useState<MyForm | null>(null)
 
   return (
     <div className="w-full mx-auto flex flex-col gap-6">

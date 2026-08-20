@@ -1,14 +1,14 @@
-import { MyForm, FormStatus, SharedUser } from '../types/my-form.type'
-import { MyFormDTO, CreateFormInput, UpdateFormInput } from '../types/my-form.dto'
+import {
+  MyForm,
+  FormStatus,
+  SharedUser,
+  CreateFormInput,
+  UpdateFormInput,
+} from '../types/my-form.type'
+import { FORM_STATUS_LABELS } from '../constants/my-form.constant'
 import { myFormRepository } from '../repositories'
 
-const STATUS_LABELS: Record<FormStatus, string> = {
-  [FormStatus.ACTIVE]: 'Đang sử dụng',
-  [FormStatus.DRAFT]: 'Bản nháp',
-  [FormStatus.ARCHIVED]: 'Đã lưu trữ',
-}
-
-function mapToDTO(form: MyForm): MyFormDTO {
+function mapToForm(form: any): MyForm {
   const createdDate = new Date(form.createdAt)
   const updatedDate = new Date(form.updatedAt)
 
@@ -25,24 +25,24 @@ function mapToDTO(form: MyForm): MyFormDTO {
     updatedAt: updatedDate.toISOString(),
     formattedCreatedAt: createdDate.toLocaleDateString('vi-VN'),
     formattedUpdatedAt: updatedDate.toLocaleDateString('vi-VN'),
-    statusLabel: STATUS_LABELS[form.status] || form.status,
+    statusLabel: FORM_STATUS_LABELS[form.status as FormStatus] || form.status,
     shareSummary,
   }
 }
 
 export const myFormService = {
-  async getMyForms(): Promise<MyFormDTO[]> {
+  async getMyForms(): Promise<MyForm[]> {
     const forms = await myFormRepository.findAll()
-    return forms.map(mapToDTO)
+    return forms.map(mapToForm)
   },
 
-  async getMyFormById(id: number): Promise<MyFormDTO | null> {
+  async getMyFormById(id: number): Promise<MyForm | null> {
     const form = await myFormRepository.findById(id)
     if (!form) return null
-    return mapToDTO(form)
+    return mapToForm(form)
   },
 
-  async createForm(input: CreateFormInput): Promise<MyFormDTO> {
+  async createForm(input: CreateFormInput): Promise<MyForm> {
     const created = await myFormRepository.create({
       title: input.title,
       description: input.description,
@@ -50,13 +50,13 @@ export const myFormService = {
       sourceTemplateId: input.sourceTemplateId,
       sourceTemplateName: input.sourceTemplateName,
     })
-    return mapToDTO(created)
+    return mapToForm(created)
   },
 
-  async updateForm(id: number, input: UpdateFormInput): Promise<MyFormDTO | null> {
+  async updateForm(id: number, input: UpdateFormInput): Promise<MyForm | null> {
     const updated = await myFormRepository.update(id, input)
     if (!updated) return null
-    return mapToDTO(updated)
+    return mapToForm(updated)
   },
 
   async deleteForm(id: number): Promise<boolean> {
@@ -66,24 +66,24 @@ export const myFormService = {
   async duplicateForm(
     id: number,
     customData?: { title?: string; description?: string }
-  ): Promise<MyFormDTO | null> {
+  ): Promise<MyForm | null> {
     const duplicated = await myFormRepository.duplicate(id, customData)
     if (!duplicated) return null
-    return mapToDTO(duplicated)
+    return mapToForm(duplicated)
   },
 
-  async updateFormStatus(id: number, status: FormStatus): Promise<MyFormDTO | null> {
+  async updateFormStatus(id: number, status: FormStatus): Promise<MyForm | null> {
     const updated = await myFormRepository.updateStatus(id, status)
     if (!updated) return null
-    return mapToDTO(updated)
+    return mapToForm(updated)
   },
 
   async updateFormSharing(
     id: number,
     sharing: { isPublic: boolean; sharedWith: SharedUser[] }
-  ): Promise<MyFormDTO | null> {
+  ): Promise<MyForm | null> {
     const updated = await myFormRepository.updateSharing(id, sharing)
     if (!updated) return null
-    return mapToDTO(updated)
+    return mapToForm(updated)
   },
 }

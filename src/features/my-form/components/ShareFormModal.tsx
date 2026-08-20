@@ -33,11 +33,10 @@ import {
   Shield,
 } from 'lucide-react'
 import { getFormShareUrl } from '@/lib/url'
-import { MyFormDTO } from '../types/my-form.dto'
-import { ShareRole, SharedUser } from '../types/my-form.type'
+import { MyForm, ShareRole, SharedUser } from '../types/my-form.type'
 
 interface ShareFormModalProps {
-  form: MyFormDTO | null
+  form: MyForm | null
   open: boolean
   onOpenChange: (open: boolean) => void
   onUpdateSharing: (

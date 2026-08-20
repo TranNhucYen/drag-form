@@ -13,10 +13,10 @@ import {
   AlertDialogAction,
 } from '@/components/ui/alert-dialog'
 import { AlertTriangle, Loader2 } from 'lucide-react'
-import { MyFormDTO } from '../types/my-form.dto'
+import { MyForm } from '../types/my-form.type'
 
 interface DeleteFormModalProps {
-  form: MyFormDTO | null
+  form: MyForm | null
   open: boolean
   onOpenChange: (open: boolean) => void
   onConfirmDelete: (id: number) => Promise<unknown>

@@ -1,8 +1,13 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from 'react'
-import { MyFormDTO, CreateFormInput, UpdateFormInput } from '../types/my-form.dto'
-import { FormStatus, SharedUser } from '../types/my-form.type'
+import {
+  MyForm,
+  CreateFormInput,
+  UpdateFormInput,
+  FormStatus,
+  SharedUser,
+} from '../types/my-form.type'
 import {
   getMyFormsAction,
   createFormAction,
@@ -14,7 +19,7 @@ import {
 } from '../actions/my-form.action'
 
 export function useMyFormList() {
-  const [data, setData] = useState<MyFormDTO[]>([])
+  const [data, setData] = useState<MyForm[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')

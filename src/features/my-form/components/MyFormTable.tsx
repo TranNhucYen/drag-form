@@ -36,15 +36,15 @@ import {
   Sparkles,
 } from 'lucide-react'
 import Link from 'next/link'
-import { MyFormDTO } from '../types/my-form.dto'
-import { FormStatus } from '../types/my-form.type'
+import { MyForm, FormStatus } from '../types/my-form.type'
+import { FORM_STATUS_LABELS } from '../constants/my-form.constant'
 
 interface MyFormTableProps {
-  forms: MyFormDTO[]
-  onOpenPreview: (form: MyFormDTO) => void
-  onOpenShare: (form: MyFormDTO) => void
-  onOpenDelete: (form: MyFormDTO) => void
-  onOpenDuplicate: (form: MyFormDTO) => void
+  forms: MyForm[]
+  onOpenPreview: (form: MyForm) => void
+  onOpenShare: (form: MyForm) => void
+  onOpenDelete: (form: MyForm) => void
+  onOpenDuplicate: (form: MyForm) => void
   onUpdateStatus: (id: number, status: FormStatus) => Promise<unknown>
 }
 
@@ -57,30 +57,30 @@ export function MyFormTable({
   onUpdateStatus,
 }: MyFormTableProps) {
 
-  const renderStatus = (form: MyFormDTO) => {
+  const renderStatus = (form: MyForm) => {
     switch (form.status) {
       case FormStatus.ACTIVE:
         return (
           <span className="text-xs font-medium text-emerald-600">
-            Đang sử dụng
+            {FORM_STATUS_LABELS[FormStatus.ACTIVE]}
           </span>
         )
       case FormStatus.DRAFT:
         return (
           <span className="text-xs font-medium text-amber-600">
-            Bản nháp
+            {FORM_STATUS_LABELS[FormStatus.DRAFT]}
           </span>
         )
       case FormStatus.ARCHIVED:
         return (
           <span className="text-xs font-medium text-muted-foreground">
-            Đã lưu trữ
+            {FORM_STATUS_LABELS[FormStatus.ARCHIVED]}
           </span>
         )
     }
   }
 
-  const renderAccessBadge = (form: MyFormDTO) => {
+  const renderAccessBadge = (form: MyForm) => {
     if (form.isPublic) {
       return (
         <button

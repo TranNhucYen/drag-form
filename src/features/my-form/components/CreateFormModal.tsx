@@ -15,12 +15,12 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Plus, LayoutTemplate, ArrowRight, Loader2 } from 'lucide-react'
 import Link from 'next/link'
-import { MyFormDTO } from '../types/my-form.dto'
+import { MyForm } from '../types/my-form.type'
 
 interface CreateFormModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onCreateBlank: (data: { title: string; description?: string }) => Promise<MyFormDTO>
+  onCreateBlank: (data: { title: string; description?: string }) => Promise<MyForm>
 }
 
 type Step = 'choose_mode' | 'blank_form'

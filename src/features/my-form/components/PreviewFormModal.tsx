@@ -19,11 +19,10 @@ import {
   ChevronDown,
 } from 'lucide-react'
 import Link from 'next/link'
-import { MyFormDTO } from '../types/my-form.dto'
-import { FormStatus } from '../types/my-form.type'
+import { MyForm, FormStatus } from '../types/my-form.type'
 
 interface PreviewFormModalProps {
-  form: MyFormDTO | null
+  form: MyForm | null
   open: boolean
   onOpenChange: (open: boolean) => void
 }

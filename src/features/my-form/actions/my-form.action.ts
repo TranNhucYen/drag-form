@@ -1,10 +1,15 @@
 'use server'
 
-import { MyFormDTO, CreateFormInput, UpdateFormInput } from '../types/my-form.dto'
-import { FormStatus, SharedUser } from '../types/my-form.type'
+import {
+  MyForm,
+  CreateFormInput,
+  UpdateFormInput,
+  FormStatus,
+  SharedUser,
+} from '../types/my-form.type'
 import { myFormService } from '../services/my-form.service'
 
-export async function getMyFormsAction(): Promise<MyFormDTO[]> {
+export async function getMyFormsAction(): Promise<MyForm[]> {
   try {
     return await myFormService.getMyForms()
   } catch (error) {
@@ -13,7 +18,7 @@ export async function getMyFormsAction(): Promise<MyFormDTO[]> {
   }
 }
 
-export async function getMyFormByIdAction(id: number): Promise<MyFormDTO | null> {
+export async function getMyFormByIdAction(id: number): Promise<MyForm | null> {
   try {
     return await myFormService.getMyFormById(id)
   } catch (error) {
@@ -22,7 +27,7 @@ export async function getMyFormByIdAction(id: number): Promise<MyFormDTO | null>
   }
 }
 
-export async function createFormAction(input: CreateFormInput): Promise<MyFormDTO> {
+export async function createFormAction(input: CreateFormInput): Promise<MyForm> {
   try {
     return await myFormService.createForm(input)
   } catch (error) {
@@ -34,7 +39,7 @@ export async function createFormAction(input: CreateFormInput): Promise<MyFormDT
 export async function updateFormAction(
   id: number,
   input: UpdateFormInput
-): Promise<MyFormDTO | null> {
+): Promise<MyForm | null> {
   try {
     return await myFormService.updateForm(id, input)
   } catch (error) {
@@ -55,7 +60,7 @@ export async function deleteFormAction(id: number): Promise<boolean> {
 export async function duplicateFormAction(
   id: number,
   customData?: { title?: string; description?: string }
-): Promise<MyFormDTO | null> {
+): Promise<MyForm | null> {
   try {
     return await myFormService.duplicateForm(id, customData)
   } catch (error) {
@@ -67,7 +72,7 @@ export async function duplicateFormAction(
 export async function updateFormStatusAction(
   id: number,
   status: FormStatus
-): Promise<MyFormDTO | null> {
+): Promise<MyForm | null> {
   try {
     return await myFormService.updateFormStatus(id, status)
   } catch (error) {
@@ -79,7 +84,7 @@ export async function updateFormStatusAction(
 export async function updateFormSharingAction(
   id: number,
   sharing: { isPublic: boolean; sharedWith: SharedUser[] }
-): Promise<MyFormDTO | null> {
+): Promise<MyForm | null> {
   try {
     return await myFormService.updateFormSharing(id, sharing)
   } catch (error) {

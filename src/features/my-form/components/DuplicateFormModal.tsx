@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -14,16 +14,16 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Copy, Loader2 } from 'lucide-react'
-import { MyFormDTO } from '../types/my-form.dto'
+import { MyForm } from '../types/my-form.type'
 
 interface DuplicateFormModalProps {
-  form: MyFormDTO | null
+  form: MyForm | null
   open: boolean
   onOpenChange: (open: boolean) => void
   onConfirmDuplicate: (
     id: number,
     data: { title: string; description?: string }
-  ) => Promise<MyFormDTO | null>
+  ) => Promise<MyForm | null>
 }
 
 export function DuplicateFormModal({

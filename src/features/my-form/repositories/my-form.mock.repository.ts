@@ -99,8 +99,8 @@ export const myFormMockRepository: IMyFormRepository = {
     return form ? { ...form } : null
   },
 
-  async create(data: Partial<MyForm>): Promise<MyForm> {
-    const newId = mockForms.length > 0 ? Math.max(...mockForms.map((f) => f.id)) + 1 : 1
+  async create(data: any): Promise<MyForm> {
+    const newId = Math.max(...mockForms.map((f) => f.id), 0) + 1
     const now = new Date()
     const newForm: MyForm = {
       id: newId,
@@ -120,7 +120,7 @@ export const myFormMockRepository: IMyFormRepository = {
     return { ...newForm }
   },
 
-  async update(id: number, data: Partial<MyForm>): Promise<MyForm | null> {
+  async update(id: number, data: any): Promise<MyForm | null> {
     const index = mockForms.findIndex((f) => f.id === id)
     if (index === -1) return null
 

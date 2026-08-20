@@ -1,20 +1,20 @@
 import { MyForm, FormStatus, SharedUser } from '../types/my-form.type'
 
 export interface IMyFormRepository {
-  findAll(): Promise<MyForm[]>
-  findById(id: number): Promise<MyForm | null>
-  create(data: Partial<MyForm>): Promise<MyForm>
-  update(id: number, data: Partial<MyForm>): Promise<MyForm | null>
-  delete(id: number): Promise<boolean>
+  findAll(): Promise<any[]>
+  findById(id: number): Promise<any | null>
+  create(data: any): Promise<any>
+  update(id: number, data: any): Promise<any | null>
+  delete(id: number): Promise<any>
   duplicate(
     id: number,
     customData?: { title?: string; description?: string }
-  ): Promise<MyForm | null>
-  updateStatus(id: number, status: FormStatus): Promise<MyForm | null>
+  ): Promise<any | null>
+  updateStatus(id: number, status: FormStatus): Promise<any | null>
   updateSharing(
     id: number,
     sharing: { isPublic: boolean; sharedWith: SharedUser[] }
-  ): Promise<MyForm | null>
+  ): Promise<any | null>
 }
 
 export const drizzleMyFormRepository: IMyFormRepository = {

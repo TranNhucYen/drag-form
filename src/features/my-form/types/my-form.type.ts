@@ -1,4 +1,4 @@
-﻿export enum FormStatus {
+export enum FormStatus {
   DRAFT = 'draft',
   ACTIVE = 'active',
   ARCHIVED = 'archived',
@@ -29,4 +29,23 @@ export interface MyForm {
   sourceTemplateName?: string
   createdAt: Date | string
   updatedAt: Date | string
+  formattedCreatedAt?: string
+  formattedUpdatedAt?: string
+  statusLabel?: string
+  shareSummary?: string
+}
+
+export interface CreateFormInput {
+  title: string
+  description?: string
+  sourceTemplateId?: number
+  sourceTemplateName?: string
+}
+
+export interface UpdateFormInput {
+  title?: string
+  description?: string
+  status?: FormStatus
+  isPublic?: boolean
+  sharedWith?: SharedUser[]
 }
