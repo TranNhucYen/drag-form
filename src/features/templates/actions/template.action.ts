@@ -1,9 +1,9 @@
 'use server'
 
-import { TemplateDTO } from "../types/template.dto"
+import { Template } from "../types/template.type"
 import { templateService } from "../services/template.service"
 
-export async function getTemplatesAction(): Promise<TemplateDTO[]> {
+export async function getTemplatesAction(): Promise<Template[]> {
   try {
     const templates = await templateService.getTemplates()
     return templates
@@ -13,7 +13,7 @@ export async function getTemplatesAction(): Promise<TemplateDTO[]> {
   }
 }
 
-export async function getTemplateByIdAction(id: number): Promise<TemplateDTO | null> {
+export async function getTemplateByIdAction(id: number): Promise<Template | null> {
   try {
     const template = await templateService.getTemplateById(id)
     return template

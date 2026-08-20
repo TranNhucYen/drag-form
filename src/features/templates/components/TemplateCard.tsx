@@ -4,11 +4,10 @@ import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Download, Pencil, FileText } from "lucide-react"
 import Link from "next/link"
-import { TemplateDTO } from "../types/template.dto"
-import { TemplatePricingType, TemplateStatus } from "../types/template.type"
+import { Template, TemplatePricingType, TemplateStatus } from "../types/template.type"
 
 interface TemplateCardProps {
-  template: TemplateDTO
+  template: Template
 }
 
 export function TemplateCard({ template }: TemplateCardProps) {

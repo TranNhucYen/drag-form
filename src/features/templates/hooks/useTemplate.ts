@@ -1,11 +1,11 @@
 'use client'
 
 import { useState, useEffect, useCallback, useMemo } from "react"
-import { TemplateDTO } from "../types/template.dto"
+import { Template } from "../types/template.type"
 import { getTemplatesAction, getTemplateByIdAction } from "../actions/template.action"
 
 export function useTemplateList() {
-  const [data, setData] = useState<TemplateDTO[]>([])
+  const [data, setData] = useState<Template[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
@@ -29,7 +29,13 @@ export function useTemplateList() {
   }, [fetchTemplates])
 
   const categories = useMemo(() => {
-    const unique = Array.from(new Set(data.map((item) => item.categoryName)))
+    const unique = Array.from(
+      new Set(
+        data
+          .map((item) => item.categoryName)
+          .filter((c): c is string => Boolean(c))
+      )
+    )
     return ["all", ...unique]
   }, [data])
 
@@ -38,7 +44,7 @@ export function useTemplateList() {
       const matchesSearch =
         template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (template.description?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
-        template.categoryName.toLowerCase().includes(searchTerm.toLowerCase())
+        (template.categoryName?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
 
       const matchesCategory =
         selectedCategory === "all" || template.categoryName === selectedCategory
@@ -63,7 +69,7 @@ export function useTemplateList() {
 
 
 export function useTemplateDetail(id: number) {
-  const [template, setTemplate] = useState<TemplateDTO | null>(null)
+  const [template, setTemplate] = useState<Template | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 

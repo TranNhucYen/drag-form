@@ -22,14 +22,16 @@ export enum TemplateStatus {
 export interface Template {
   id: number
   name: string
-  ownerId: number
-  categoryId: number
+  ownerId?: number
+  ownerName: string
+  categoryId?: number
+  categoryName: string
   type: TemplateType
   pricingType: TemplatePricingType
   status: TemplateStatus
   description?: string
   guideline?: GuidelineItem[]
   downloads: number
-  createdAt: Date
-  updatedAt: Date
+  createdAt?: Date | string
+  updatedAt: Date | string
 }

@@ -2,8 +2,8 @@ import { Template } from "../types/template.type"
 
 
 export interface ITemplateRepository {
-  findById(id: number): Promise<Template | null>
-  findAll(): Promise<Template[]>
+  findById(id: number): Promise<any | null>
+  findAll(): Promise<any[]>
 
 }
 
