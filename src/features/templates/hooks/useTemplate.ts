@@ -1,0 +1,110 @@
+'use client'
+
+import { useState, useEffect, useCallback, useMemo } from "react"
+import { TemplateDTO } from "../types/template.dto"
+import { getTemplatesAction, getTemplateByIdAction } from "../actions/template.action"
+
+export function useTemplateList() {
+  const [data, setData] = useState<TemplateDTO[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [selectedCategory, setSelectedCategory] = useState<string>("all")
+  const [selectedStatus, setSelectedStatus] = useState<string>("all")
+
+  const fetchTemplates = useCallback(async () => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const res = await getTemplatesAction()
+      setData(res)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Đã có lỗi xảy ra")
+    } finally {
+      setIsLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchTemplates()
+  }, [fetchTemplates])
+
+  const categories = useMemo(() => {
+    const unique = Array.from(new Set(data.map((item) => item.categoryName)))
+    return ["all", ...unique]
+  }, [data])
+
+  const filteredTemplates = useMemo(() => {
+    return data.filter((template) => {
+      const matchesSearch =
+        template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (template.description?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
+        template.categoryName.toLowerCase().includes(searchTerm.toLowerCase())
+
+      const matchesCategory =
+        selectedCategory === "all" || template.categoryName === selectedCategory
+
+      const matchesStatus =
+        selectedStatus === "all" || template.status === selectedStatus
+
+      return matchesSearch && matchesCategory && matchesStatus
+    })
+  }, [data, searchTerm, selectedCategory, selectedStatus])
+
+  return {
+    templates: filteredTemplates,
+    rawTemplates: data,
+    categories,
+    isLoading,
+    error,
+    searchTerm,
+    setSearchTerm,
+    selectedCategory,
+    setSelectedCategory,
+    selectedStatus,
+    setSelectedStatus,
+    refetch: fetchTemplates,
+  }
+}
+
+
+export function useTemplateDetail(id: number) {
+  const [template, setTemplate] = useState<TemplateDTO | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchTemplate = useCallback(async () => {
+    if (!id || isNaN(id)) {
+      setIsLoading(false)
+      setError("ID biểu mẫu không hợp lệ")
+      return
+    }
+
+    setIsLoading(true)
+    setError(null)
+    try {
+      const res = await getTemplateByIdAction(id)
+      if (!res) {
+        setError("Không tìm thấy biểu mẫu")
+      } else {
+        setTemplate(res)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Đã có lỗi xảy ra")
+    } finally {
+      setIsLoading(false)
+    }
+  }, [id])
+
+  useEffect(() => {
+    fetchTemplate()
+  }, [fetchTemplate])
+
+  return {
+    template,
+    isLoading,
+    error,
+    refetch: fetchTemplate,
+  }
+}
+
