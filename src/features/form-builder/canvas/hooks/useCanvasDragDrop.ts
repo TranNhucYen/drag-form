@@ -2,11 +2,16 @@ import { useDragDropMonitor } from "@dnd-kit/react";
 import { useRef } from "react";
 import type { Rect } from "../../domain/geometry";
 import { getCollidingFieldIds, isOutsideCanvas } from "../utils/collision.utils";
+import { calculateSnapAndGuides, type AlignmentGuide } from "../utils/snap.utils";
 import type { FieldType } from "../../types/formBuilder.types";
 import { FIELD_DEFINITIONS_MAP, PALETTE_ITEM_CENTER } from "../../constants/fields.config";
+import type { CanvasField } from "../types/canvas.types";
 
 export type UseCanvasDragDropOptions = {
   canvasRef: React.RefObject<HTMLDivElement | null>;
+  canvasSize: { width: number; height: number };
+  fields: CanvasField[];
+  onGuidesChange?: (guides: AlignmentGuide[]) => void;
   onCollisionChange?: (isColliding: boolean) => void;
   setCollidingFieldIds: (ids: string[]) => void;
   onDropPosition: (
@@ -52,10 +57,13 @@ function getEffectiveDraggedRect(
 }
 
 /**
- * useCanvasDragDrop: Hook xử lý kéo thả phần tử trên Canvas
+ * useCanvasDragDrop: Hook xử lý kéo thả phần tử trên Canvas kết hợp Smart Guides và Snapping
  */
 export function useCanvasDragDrop({
   canvasRef,
+  canvasSize,
+  fields,
+  onGuidesChange,
   onCollisionChange,
   setCollidingFieldIds,
   onDropPosition,
@@ -68,6 +76,7 @@ export function useCanvasDragDrop({
       rawShapeRectRef.current = null;
       setCollidingFieldIds([]);
       onCollisionChange?.(false);
+      onGuidesChange?.([]);
     },
 
     onDragMove: (event) => {
@@ -80,15 +89,42 @@ export function useCanvasDragDrop({
           | { fieldId?: string; type?: FieldType; width?: number; height?: number }
           | undefined;
 
-        const rect = getEffectiveDraggedRect(shapeRect, sourceData);
-
         const canvas = canvasRef.current;
-        const collidingIds = canvas
-          ? getCollidingFieldIds(canvas, rect, sourceData?.fieldId)
-          : [];
-        const outsideCanvas = canvas
-          ? isOutsideCanvas(canvas.getBoundingClientRect(), rect)
-          : false;
+        if (!canvas) {
+          return;
+        }
+
+        const canvasRect = canvas.getBoundingClientRect();
+        const rawRect = getEffectiveDraggedRect(shapeRect, sourceData);
+
+        // Tính toán tọa độ thô tương đối trên Canvas
+        const rawCanvasPos = {
+          x: rawRect.left - canvasRect.left,
+          y: rawRect.top - canvasRect.top,
+          width: rawRect.width,
+          height: rawRect.height,
+        };
+
+        // Tính toán hít đường gióng (Smart Guides & Snapping)
+        const snap = calculateSnapAndGuides(
+          rawCanvasPos,
+          fields,
+          canvasSize,
+          sourceData?.fieldId,
+        );
+
+        onGuidesChange?.(snap.guides);
+
+        // Bounding box sau khi hít (dùng để quét va chạm chính xác)
+        const snappedRect: Rect = {
+          left: canvasRect.left + snap.snappedX,
+          top: canvasRect.top + snap.snappedY,
+          width: rawRect.width,
+          height: rawRect.height,
+        };
+
+        const collidingIds = getCollidingFieldIds(canvas, snappedRect, sourceData?.fieldId);
+        const outsideCanvas = isOutsideCanvas(canvasRect, snappedRect);
 
         setCollidingFieldIds(collidingIds);
         onCollisionChange?.(collidingIds.length > 0 || outsideCanvas);
@@ -98,6 +134,7 @@ export function useCanvasDragDrop({
     onDragEnd: (event) => {
       setCollidingFieldIds([]);
       onCollisionChange?.(false);
+      onGuidesChange?.([]);
 
       if (event.operation.canceled || event.operation.target?.id !== "canvas") {
         return;
@@ -125,12 +162,33 @@ export function useCanvasDragDrop({
         return;
       }
 
-      const draggedRect = getEffectiveDraggedRect(rawShapeRect, sourceData);
+      const rawRect = getEffectiveDraggedRect(rawShapeRect, sourceData);
+      const rawCanvasPos = {
+        x: rawRect.left - canvasRect.left,
+        y: rawRect.top - canvasRect.top,
+        width: rawRect.width,
+        height: rawRect.height,
+      };
+
+      const snap = calculateSnapAndGuides(
+        rawCanvasPos,
+        fields,
+        canvasSize,
+        sourceData.fieldId,
+      );
+
+      const finalRect: Rect = {
+        left: canvasRect.left + snap.snappedX,
+        top: canvasRect.top + snap.snappedY,
+        width: rawRect.width,
+        height: rawRect.height,
+      };
+
       const sourceFieldId = sourceData.fieldId;
-      const outsideCanvas = isOutsideCanvas(canvasRect, draggedRect);
+      const outsideCanvas = isOutsideCanvas(canvasRect, finalRect);
       const collidingIds = getCollidingFieldIds(
         canvas,
-        draggedRect,
+        finalRect,
         sourceFieldId,
       );
       const hasCollision = outsideCanvas || collidingIds.length > 0;
@@ -139,17 +197,17 @@ export function useCanvasDragDrop({
         return;
       }
 
-      const coordinates = {
-        x: draggedRect.left - canvasRect.left,
-        y: draggedRect.top - canvasRect.top,
+      const finalCoordinates = {
+        x: snap.snappedX,
+        y: snap.snappedY,
       };
 
       if (sourceData.fieldId) {
-        onDropPosition(sourceData.fieldId, coordinates);
+        onDropPosition(sourceData.fieldId, finalCoordinates);
         return;
       }
 
-      onDropNewField(sourceData.type as FieldType, coordinates);
+      onDropNewField(sourceData.type as FieldType, finalCoordinates);
       rawShapeRectRef.current = null;
     },
   });

@@ -1,4 +1,4 @@
-import { PageSize } from "../types/formBuilder.types";
+import type { PageSize } from "../types/formBuilder.types";
 
 export const PAGE_PRESETS = {
   A4: {
@@ -14,3 +14,8 @@ export const PAGE_PRESETS = {
     height: 420,
   },
 } as const satisfies Record<string, PageSize>;
+
+/**
+ * Bán kính hít đường gióng thông minh tính theo pixel
+ */
+export const SNAP_THRESHOLD = 5;

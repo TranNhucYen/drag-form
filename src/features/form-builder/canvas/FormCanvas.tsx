@@ -1,5 +1,5 @@
 import { useDroppable } from "@dnd-kit/react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { PAGE_PRESETS } from "../constants/form.constants";
 import { toInternalUnit, toScreenPx } from "../domain/units";
 import { FieldRenderer } from "../fields/FieldRenderer";
@@ -7,6 +7,8 @@ import { RESIZABLE_FIELD_TYPES } from "./constants/resizableFieldTypes";
 import { FormFieldShell } from "./FormFieldShell";
 import { useCanvasDragDrop } from "./hooks/useCanvasDragDrop";
 import { useCanvasFieldsState } from "./hooks/useCanvasFieldsState";
+import { SmartGuidesOverlay } from "./components/SmartGuidesOverlay";
+import type { AlignmentGuide } from "./utils/snap.utils";
 
 type FormCanvasProps = {
   pageSize?: (typeof PAGE_PRESETS)[keyof typeof PAGE_PRESETS];
@@ -30,6 +32,7 @@ export function FormCanvas({
   };
 
   const pageRef = useRef<HTMLDivElement>(null);
+  const [activeGuides, setActiveGuides] = useState<AlignmentGuide[]>([]);
 
   const { ref: droppableRef } = useDroppable({
     id: "canvas",
@@ -54,6 +57,9 @@ export function FormCanvas({
 
   useCanvasDragDrop({
     canvasRef: pageRef,
+    canvasSize: { width: canvasStyle.width, height: canvasStyle.height },
+    fields,
+    onGuidesChange: setActiveGuides,
     onCollisionChange,
     setCollidingFieldIds,
     onDropPosition: updateFieldPosition,
@@ -75,6 +81,9 @@ export function FormCanvas({
         height: `${canvasStyle.height}px`,
       }}
     >
+      {/* Lớp hiển thị đường gióng thông minh (Smart Guides) */}
+      <SmartGuidesOverlay guides={activeGuides} />
+
       {fields.map((field) => {
         const isResizable = RESIZABLE_FIELD_TYPES.includes(field.type);
         const hasMeasuredSize =
