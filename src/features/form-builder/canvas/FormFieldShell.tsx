@@ -1,9 +1,10 @@
 import { PointerSensor, useDraggable } from "@dnd-kit/react";
 import { useEffectEvent, useMemo, useRef } from "react";
 import type { FieldType } from "../types/formBuilder.types";
-import type { FieldResizeChange } from "./types/canvas.types";
+import type { CanvasField, FieldResizeChange } from "./types/canvas.types";
 import { useFieldResize } from "./hooks/useFieldResize";
 import { ResizeHandles } from "./components/ResizeHandles";
+import type { AlignmentGuide } from "./utils/snap.utils";
 
 type FormFieldShellProps = {
   children: React.ReactNode;
@@ -11,10 +12,13 @@ type FormFieldShellProps = {
   id: string;
   type: FieldType;
   size?: { width: number; height: number };
+  fields?: CanvasField[];
+  canvasSize?: { width: number; height: number };
   allowResize?: boolean;
   isColliding?: boolean;
   isSelected?: boolean;
   onSelect?: () => void;
+  onGuidesChange?: (guides: AlignmentGuide[]) => void;
   onResize?: (change: FieldResizeChange) => void;
   onMeasure?: (size: { width: number; height: number }) => void;
   onCollisionChange?: (isColliding: boolean) => void;
@@ -30,10 +34,13 @@ export function FormFieldShell({
   id,
   type,
   size: controlledSize,
+  fields,
+  canvasSize,
   allowResize = false,
   isColliding = false,
   isSelected = false,
   onSelect,
+  onGuidesChange,
   onResize,
   onMeasure,
   onCollisionChange,
@@ -99,6 +106,9 @@ export function FormFieldShell({
     elementRef: shellRef,
     position,
     controlledSize,
+    fields,
+    canvasSize,
+    onGuidesChange,
     onResize,
     onMeasure,
     onCollisionChange,

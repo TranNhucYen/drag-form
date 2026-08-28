@@ -100,10 +100,13 @@ export function FormCanvas({
                 ? { width: field.width!, height: field.height! }
                 : undefined
             }
+            fields={fields}
+            canvasSize={{ width: canvasStyle.width, height: canvasStyle.height }}
             allowResize={isResizable}
             isColliding={collidingFieldIds.includes(field.id)}
             isSelected={selectedFieldId === field.id}
             onSelect={() => setSelectedFieldId(field.id)}
+            onGuidesChange={setActiveGuides}
             onResize={(change) => updateFieldResize(field.id, change)}
             onCollisionChange={onCollisionChange}
             onCollidingFieldsChange={setCollidingFieldIds}

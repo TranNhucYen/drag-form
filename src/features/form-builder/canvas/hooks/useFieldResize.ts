@@ -1,16 +1,20 @@
 import { useEffect, useEffectEvent, useRef, useState } from "react";
-import type { FieldResizeChange } from "../types/canvas.types";
+import type { CanvasField, FieldResizeChange } from "../types/canvas.types";
 import { getCollidingFieldIds, isOutsideCanvas } from "../utils/collision.utils";
 import {
   calculateResizeBounds,
   type Rect,
   type ResizeHandle,
 } from "../../domain/geometry";
+import { calculateResizeSnapAndGuides, type AlignmentGuide } from "../utils/snap.utils";
 
 export type UseFieldResizeOptions = {
   elementRef: React.RefObject<HTMLDivElement | null>;
   position: { x: number; y: number };
   controlledSize?: { width: number; height: number };
+  fields?: CanvasField[];
+  canvasSize?: { width: number; height: number };
+  onGuidesChange?: (guides: AlignmentGuide[]) => void;
   onResize?: (change: FieldResizeChange) => void;
   onMeasure?: (size: { width: number; height: number }) => void;
   onCollisionChange?: (isColliding: boolean) => void;
@@ -19,12 +23,15 @@ export type UseFieldResizeOptions = {
 };
 
 /**
- * useFieldResize: Hook xử lý co giãn kích thước của một Field
+ * useFieldResize: Hook xử lý co giãn kích thước của một Field kết hợp Smart Guides & Snapping
  */
 export function useFieldResize({
   elementRef,
   position,
   controlledSize,
+  fields,
+  canvasSize,
+  onGuidesChange,
   onResize,
   onMeasure,
   onCollisionChange,
@@ -93,13 +100,28 @@ export function useFieldResize({
       return;
     }
 
-    const nextBounds = calculateResizeBounds({
+    const rawBounds = calculateResizeBounds({
       handle: resize.handle,
       startPosition: resize.position,
       startSize: { width: resize.width, height: resize.height },
       deltaX: event.clientX - resize.startX,
       deltaY: event.clientY - resize.startY,
     });
+
+    let nextBounds = rawBounds;
+
+    // Hít đường gióng khi resize (Smart Guides và Snapping)
+    if (fields && canvasSize) {
+      const snap = calculateResizeSnapAndGuides(
+        rawBounds,
+        resize.handle,
+        fields,
+        canvasSize,
+        id,
+      );
+      nextBounds = snap.bounds;
+      onGuidesChange?.(snap.guides);
+    }
 
     pendingResizeRef.current = nextBounds;
     applyResizePreview(nextBounds);
@@ -130,6 +152,7 @@ export function useFieldResize({
 
   const handlePointerUp = useEffectEvent(() => {
     setResize(null);
+    onGuidesChange?.([]);
 
     const element = elementRef.current;
     const canvas =
