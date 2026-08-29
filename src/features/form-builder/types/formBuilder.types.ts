@@ -17,4 +17,4 @@ export type PageSize = {
   width: number;  // mm
   height: number; // mm
 };
-type Orientation = 'PORTRAIT' | 'LANDSCAPE';
+export type Orientation = 'PORTRAIT' | 'LANDSCAPE';
