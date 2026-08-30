@@ -9,10 +9,11 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { PAGE_SIZE_OPTIONS } from "../constants/toolbar.constants";
 import type { Orientation } from "../../types/formBuilder.types";
+import type { PagePresetKey } from "../../store/useFormBuilderStore";
 
 type PageSizePopoverProps = {
-  pageSize: string;
-  onPageSizeChange: (pageSize: string) => void;
+  pageSize: PagePresetKey;
+  onPageSizeChange: (pageSize: PagePresetKey) => void;
   orientation: Orientation;
   onOrientationChange: (orientation: Orientation) => void;
 };

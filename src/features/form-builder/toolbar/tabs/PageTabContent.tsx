@@ -3,13 +3,17 @@ import { SlidersHorizontal } from "lucide-react";
 import { EditableSelect } from "../components/EditableSelect";
 import { PageSizePopover } from "../components/PageSizePopover";
 import { MARGIN_FIELDS, MARGIN_OPTIONS } from "../constants/toolbar.constants";
-import type { Orientation } from "../../types/formBuilder.types";
+import { useFormBuilderStore } from "../../store/useFormBuilderStore";
 
 export function PageTabContent() {
-  const [pageSize, setPageSize] = useState("A4");
-  const [orientation, setOrientation] = useState<Orientation>(
-    "PORTRAIT",
+  const pageSizePreset = useFormBuilderStore((state) => state.pageSizePreset);
+  const orientation = useFormBuilderStore((state) => state.orientation);
+
+  const setPageSizePreset = useFormBuilderStore(
+    (state) => state.setPageSizePreset,
   );
+  const setOrientation = useFormBuilderStore((state) => state.setOrientation);
+
   const [margins, setMargins] = useState({
     top: "20",
     bottom: "20",
@@ -25,8 +29,8 @@ export function PageTabContent() {
     <div className="flex items-center gap-2.5">
       {/* Khổ giấy & Hướng giấy */}
       <PageSizePopover
-        pageSize={pageSize}
-        onPageSizeChange={setPageSize}
+        pageSize={pageSizePreset}
+        onPageSizeChange={setPageSizePreset}
         orientation={orientation}
         onOrientationChange={setOrientation}
       />

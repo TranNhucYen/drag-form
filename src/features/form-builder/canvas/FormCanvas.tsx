@@ -1,6 +1,5 @@
 import { useDroppable } from "@dnd-kit/react";
 import { useRef, useState } from "react";
-import { PAGE_PRESETS } from "../constants/form.constants";
 import { toInternalUnit, toScreenPx } from "../domain/units";
 import { FieldRenderer } from "../fields/FieldRenderer";
 import { RESIZABLE_FIELD_TYPES } from "./constants/resizableFieldTypes";
@@ -9,9 +8,9 @@ import { useCanvasDragDrop } from "./hooks/useCanvasDragDrop";
 import { useCanvasFieldsState } from "./hooks/useCanvasFieldsState";
 import { SmartGuidesOverlay } from "./components/SmartGuidesOverlay";
 import type { AlignmentGuide } from "./utils/snap.utils";
+import { useEffectivePageDimensions } from "../store/useFormBuilderStore";
 
 type FormCanvasProps = {
-  pageSize?: (typeof PAGE_PRESETS)[keyof typeof PAGE_PRESETS];
   onCollisionChange?: (isColliding: boolean) => void;
 };
 
@@ -19,12 +18,13 @@ type FormCanvasProps = {
  * FormCanvas: Vùng hiển thị trang in và chứa các phần tử kéo thả
  */
 export function FormCanvas({
-  pageSize = PAGE_PRESETS.A4,
   onCollisionChange,
 }: FormCanvasProps) {
+  const effectiveDimensions = useEffectivePageDimensions();
+
   const internalSize = {
-    width: toInternalUnit(pageSize.width),
-    height: toInternalUnit(pageSize.height),
+    width: toInternalUnit(effectiveDimensions.width),
+    height: toInternalUnit(effectiveDimensions.height),
   };
   const canvasStyle = {
     width: toScreenPx(internalSize.width),
