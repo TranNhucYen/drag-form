@@ -11,8 +11,7 @@ import {
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { ColorPickerPopover } from "../components/ColorPickerPopover";
-import { EditableSelect } from "../components/EditableSelect";
+import { ColorPickerPopover, EditableSelect } from "../components";
 import {
   FONT_OPTIONS,
   FONT_SIZE_OPTIONS,

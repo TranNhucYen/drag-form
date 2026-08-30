@@ -1,8 +1,12 @@
 import { useDragDropMonitor } from "@dnd-kit/react";
 import { useRef } from "react";
 import type { Rect } from "../../domain/geometry";
-import { getCollidingFieldIds, isOutsideCanvas } from "../utils/collision.utils";
-import { calculateSnapAndGuides, type AlignmentGuide } from "../utils/snap.utils";
+import {
+  calculateSnapAndGuides,
+  getCollidingFieldIds,
+  isOutsideCanvas,
+  type AlignmentGuide,
+} from "../utils";
 import type { FieldType } from "../../types/formBuilder.types";
 import { FIELD_DEFINITIONS_MAP, PALETTE_ITEM_CENTER } from "../../constants/fields.config";
 import type { CanvasField } from "../types/canvas.types";

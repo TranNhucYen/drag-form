@@ -1,13 +1,4 @@
-import type { FieldType } from "../../types/formBuilder.types";
-
-export type CanvasField = {
-  id: string;
-  type: FieldType;
-  x: number;
-  y: number;
-  width?: number;
-  height?: number;
-};
+export type { CanvasField, FieldType } from "../../types/formBuilder.types";
 
 export type FieldResizeChange = {
   position: { x: number; y: number };
@@ -15,4 +6,3 @@ export type FieldResizeChange = {
 };
 
 export type ResizeHandle = "nw" | "n" | "ne" | "e" | "se" | "s" | "sw" | "w";
-

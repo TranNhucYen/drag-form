@@ -4,10 +4,9 @@ import { toInternalUnit, toScreenPx } from "../domain/units";
 import { FieldRenderer } from "../fields/FieldRenderer";
 import { RESIZABLE_FIELD_TYPES } from "./constants/resizableFieldTypes";
 import { FormFieldShell } from "./FormFieldShell";
-import { useCanvasDragDrop } from "./hooks/useCanvasDragDrop";
-import { useCanvasFieldsState } from "./hooks/useCanvasFieldsState";
-import { SmartGuidesOverlay } from "./components/SmartGuidesOverlay";
-import type { AlignmentGuide } from "./utils/snap.utils";
+import { useCanvasDragDrop, useCanvasFieldsState } from "./hooks";
+import { SmartGuidesOverlay } from "./components";
+import type { AlignmentGuide } from "./utils";
 import { useEffectivePageDimensions } from "../store/useFormBuilderStore";
 
 type FormCanvasProps = {

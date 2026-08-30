@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
-import { EditableSelect } from "../components/EditableSelect";
-import { PageSizePopover } from "../components/PageSizePopover";
+import { EditableSelect, PageSizePopover } from "../components";
 import { MARGIN_FIELDS, MARGIN_OPTIONS } from "../constants/toolbar.constants";
 import { useFormBuilderStore } from "../../store/useFormBuilderStore";
 

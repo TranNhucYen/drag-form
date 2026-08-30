@@ -3,7 +3,7 @@ import { useState } from "react";
 import { CanvasViewPort } from "./canvas/CanvasViewPort";
 import { DragPreviewOverlay } from "./dnd/DragPreviewOverlay";
 import { Palette } from "./left-sidebar/Palette";
-import { EditorToolbar } from "./toolbar/EditorToolbar";
+import { EditorToolbar } from "./toolbar";
 
 export function FormBuilderWorkspace() {
   const [isDraggingOverField, setIsDraggingOverField] = useState(false);

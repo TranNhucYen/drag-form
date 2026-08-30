@@ -12,9 +12,18 @@ export type FieldType =
   | "image"
   | "datatable";
 
+export type CanvasField = {
+  id: string;
+  type: FieldType;
+  x: number;
+  y: number;
+  width?: number;
+  height?: number;
+};
 
 export type PageSize = {
-  width: number;  // mm
+  width: number; // mm
   height: number; // mm
 };
-export type Orientation = 'PORTRAIT' | 'LANDSCAPE';
+
+export type Orientation = "PORTRAIT" | "LANDSCAPE";

@@ -1,6 +1,5 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { HomeTabContent } from "./tabs/HomeTabContent";
-import { PageTabContent } from "./tabs/PageTabContent";
+import { HomeTabContent, PageTabContent } from "./tabs";
 
 export function EditorToolbar() {
   return (

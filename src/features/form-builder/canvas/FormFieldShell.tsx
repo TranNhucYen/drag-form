@@ -2,9 +2,9 @@ import { PointerSensor, useDraggable } from "@dnd-kit/react";
 import { useEffectEvent, useMemo, useRef } from "react";
 import type { FieldType } from "../types/formBuilder.types";
 import type { CanvasField, FieldResizeChange } from "./types/canvas.types";
-import { useFieldResize } from "./hooks/useFieldResize";
-import { ResizeHandles } from "./components/ResizeHandles";
-import type { AlignmentGuide } from "./utils/snap.utils";
+import { useFieldResize } from "./hooks";
+import { ResizeHandles } from "./components";
+import type { AlignmentGuide } from "./utils";
 
 type FormFieldShellProps = {
   children: React.ReactNode;

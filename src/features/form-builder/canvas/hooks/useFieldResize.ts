@@ -1,12 +1,16 @@
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import type { CanvasField, FieldResizeChange } from "../types/canvas.types";
-import { getCollidingFieldIds, isOutsideCanvas } from "../utils/collision.utils";
+import {
+  calculateResizeSnapAndGuides,
+  getCollidingFieldIds,
+  isOutsideCanvas,
+  type AlignmentGuide,
+} from "../utils";
 import {
   calculateResizeBounds,
   type Rect,
   type ResizeHandle,
 } from "../../domain/geometry";
-import { calculateResizeSnapAndGuides, type AlignmentGuide } from "../utils/snap.utils";
 
 export type UseFieldResizeOptions = {
   elementRef: React.RefObject<HTMLDivElement | null>;
