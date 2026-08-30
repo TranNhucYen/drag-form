@@ -54,7 +54,7 @@ export function FormFieldShell({
 }: FormFieldShellProps) {
   const shellRef = useRef<HTMLDivElement | null>(null);
 
-  // Bỏ qua drag khi bấm vào resize handle hoặc double click 
+  // Bỏ qua drag khi bấm vào resize handle
   const sensors = useMemo(
     () => [
       PointerSensor.configure({
@@ -65,10 +65,7 @@ export function FormFieldShell({
             return false;
           }
 
-          return (
-            target.closest('[data-resize-handle="true"]') !== null ||
-            event.detail > 1
-          );
+          return target.closest('[data-resize-handle="true"]') !== null;
         },
       }),
     ],
@@ -92,21 +89,10 @@ export function FormFieldShell({
     ref(element);
   };
 
-  const handleDoubleClick = useEffectEvent(() => {
+  const handleClick = useEffectEvent((event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
     onSelect?.();
   });
-
-  const handlePointerDownCapture = useEffectEvent(
-    (event: React.PointerEvent<HTMLDivElement>) => {
-      if (event.button !== 0) {
-        return;
-      }
-
-      if (event.detail === 2) {
-        onSelect?.();
-      }
-    },
-  );
 
   const { startResize } = useFieldResize({
     elementRef: shellRef,
@@ -127,8 +113,7 @@ export function FormFieldShell({
     <div
       ref={setShellRef}
       data-field-id={id}
-      onPointerDownCapture={handlePointerDownCapture}
-      onDoubleClick={handleDoubleClick}
+      onClick={handleClick}
       style={{
         position: "absolute",
         left: position.x,

@@ -31,7 +31,7 @@ export function ResizeHandles({ type, onResizeStart }: ResizeHandlesProps) {
           data-resize-handle="true"
           className={`absolute z-10 h-1.5 w-1.5 rounded-none border border-blue-600 bg-blue-600 ${handlePositions[handle]}`}
           onPointerDownCapture={(event) => onResizeStart(handle, event)}
-          onDoubleClick={(event) => event.stopPropagation()}
+          onClick={(event) => event.stopPropagation()}
         />
       ))}
     </>
