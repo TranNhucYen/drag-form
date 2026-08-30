@@ -1,13 +1,16 @@
 import { useDroppable } from "@dnd-kit/react";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { toInternalUnit, toScreenPx } from "../domain/units";
 import { FieldRenderer } from "../fields/FieldRenderer";
 import { RESIZABLE_FIELD_TYPES } from "./constants/resizableFieldTypes";
 import { FormFieldShell } from "./FormFieldShell";
 import { useCanvasDragDrop, useCanvasFieldsState } from "./hooks";
-import { SmartGuidesOverlay } from "./components";
+import { MarginCornerMarks, SmartGuidesOverlay } from "./components";
 import type { AlignmentGuide } from "./utils";
-import { useEffectivePageDimensions } from "../store/useFormBuilderStore";
+import {
+  useEffectivePageDimensions,
+  useFormBuilderStore,
+} from "../store/useFormBuilderStore";
 
 type FormCanvasProps = {
   onCollisionChange?: (isColliding: boolean) => void;
@@ -20,6 +23,7 @@ export function FormCanvas({
   onCollisionChange,
 }: FormCanvasProps) {
   const effectiveDimensions = useEffectivePageDimensions();
+  const margins = useFormBuilderStore((state) => state.margins);
 
   const internalSize = {
     width: toInternalUnit(effectiveDimensions.width),
@@ -29,6 +33,16 @@ export function FormCanvas({
     width: toScreenPx(internalSize.width),
     height: toScreenPx(internalSize.height),
   };
+
+  const marginPx = useMemo(
+    () => ({
+      top: toScreenPx(toInternalUnit(Number.parseFloat(margins.top) || 0)),
+      bottom: toScreenPx(toInternalUnit(Number.parseFloat(margins.bottom) || 0)),
+      left: toScreenPx(toInternalUnit(Number.parseFloat(margins.left) || 0)),
+      right: toScreenPx(toInternalUnit(Number.parseFloat(margins.right) || 0)),
+    }),
+    [margins.top, margins.bottom, margins.left, margins.right],
+  );
 
   const pageRef = useRef<HTMLDivElement>(null);
   const [activeGuides, setActiveGuides] = useState<AlignmentGuide[]>([]);
@@ -57,6 +71,7 @@ export function FormCanvas({
   useCanvasDragDrop({
     canvasRef: pageRef,
     canvasSize: { width: canvasStyle.width, height: canvasStyle.height },
+    margins: marginPx,
     fields,
     onGuidesChange: setActiveGuides,
     onCollisionChange,
@@ -83,6 +98,12 @@ export function FormCanvas({
       {/* Lớp hiển thị đường gióng thông minh (Smart Guides) */}
       <SmartGuidesOverlay guides={activeGuides} />
 
+      {/* Lớp hiển thị 4 góc vuông ranh giới lề trang (Margin Corner Marks) */}
+      <MarginCornerMarks
+        canvasWidth={canvasStyle.width}
+        canvasHeight={canvasStyle.height}
+      />
+
       {fields.map((field) => {
         const isResizable = RESIZABLE_FIELD_TYPES.includes(field.type);
         const hasMeasuredSize =
@@ -101,6 +122,7 @@ export function FormCanvas({
             }
             fields={fields}
             canvasSize={{ width: canvasStyle.width, height: canvasStyle.height }}
+            margins={marginPx}
             allowResize={isResizable}
             isColliding={collidingFieldIds.includes(field.id)}
             isSelected={selectedFieldId === field.id}

@@ -1,5 +1,9 @@
 import { useEffect, useEffectEvent, useRef, useState } from "react";
-import type { CanvasField, FieldResizeChange } from "../types/canvas.types";
+import type {
+  CanvasField,
+  FieldResizeChange,
+  MarginBounds,
+} from "../types/canvas.types";
 import {
   calculateResizeSnapAndGuides,
   getCollidingFieldIds,
@@ -18,6 +22,7 @@ export type UseFieldResizeOptions = {
   controlledSize?: { width: number; height: number };
   fields?: CanvasField[];
   canvasSize?: { width: number; height: number };
+  margins?: MarginBounds;
   onGuidesChange?: (guides: AlignmentGuide[]) => void;
   onResize?: (change: FieldResizeChange) => void;
   onMeasure?: (size: { width: number; height: number }) => void;
@@ -35,6 +40,7 @@ export function useFieldResize({
   controlledSize,
   fields,
   canvasSize,
+  margins,
   onGuidesChange,
   onResize,
   onMeasure,
@@ -122,6 +128,8 @@ export function useFieldResize({
         fields,
         canvasSize,
         id,
+        undefined,
+        margins,
       );
       nextBounds = snap.bounds;
       onGuidesChange?.(snap.guides);

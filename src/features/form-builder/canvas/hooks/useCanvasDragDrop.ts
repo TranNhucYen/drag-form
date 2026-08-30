@@ -9,11 +9,12 @@ import {
 } from "../utils";
 import type { FieldType } from "../../types/formBuilder.types";
 import { FIELD_DEFINITIONS_MAP, PALETTE_ITEM_CENTER } from "../../constants/fields.config";
-import type { CanvasField } from "../types/canvas.types";
+import type { CanvasField, MarginBounds } from "../types/canvas.types";
 
 export type UseCanvasDragDropOptions = {
   canvasRef: React.RefObject<HTMLDivElement | null>;
   canvasSize: { width: number; height: number };
+  margins?: MarginBounds;
   fields: CanvasField[];
   onGuidesChange?: (guides: AlignmentGuide[]) => void;
   onCollisionChange?: (isColliding: boolean) => void;
@@ -66,6 +67,7 @@ function getEffectiveDraggedRect(
 export function useCanvasDragDrop({
   canvasRef,
   canvasSize,
+  margins,
   fields,
   onGuidesChange,
   onCollisionChange,
@@ -115,6 +117,8 @@ export function useCanvasDragDrop({
           fields,
           canvasSize,
           sourceData?.fieldId,
+          undefined,
+          margins,
         );
 
         onGuidesChange?.(snap.guides);
@@ -179,6 +183,8 @@ export function useCanvasDragDrop({
         fields,
         canvasSize,
         sourceData.fieldId,
+        undefined,
+        margins,
       );
 
       const finalRect: Rect = {

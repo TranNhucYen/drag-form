@@ -1,7 +1,11 @@
 import { PointerSensor, useDraggable } from "@dnd-kit/react";
 import { useEffectEvent, useMemo, useRef } from "react";
 import type { FieldType } from "../types/formBuilder.types";
-import type { CanvasField, FieldResizeChange } from "./types/canvas.types";
+import type {
+  CanvasField,
+  FieldResizeChange,
+  MarginBounds,
+} from "./types/canvas.types";
 import { useFieldResize } from "./hooks";
 import { ResizeHandles } from "./components";
 import type { AlignmentGuide } from "./utils";
@@ -14,6 +18,7 @@ type FormFieldShellProps = {
   size?: { width: number; height: number };
   fields?: CanvasField[];
   canvasSize?: { width: number; height: number };
+  margins?: MarginBounds;
   allowResize?: boolean;
   isColliding?: boolean;
   isSelected?: boolean;
@@ -36,6 +41,7 @@ export function FormFieldShell({
   size: controlledSize,
   fields,
   canvasSize,
+  margins,
   allowResize = false,
   isColliding = false,
   isSelected = false,
@@ -108,6 +114,7 @@ export function FormFieldShell({
     controlledSize,
     fields,
     canvasSize,
+    margins,
     onGuidesChange,
     onResize,
     onMeasure,

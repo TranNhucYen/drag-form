@@ -6,3 +6,10 @@ export type FieldResizeChange = {
 };
 
 export type ResizeHandle = "nw" | "n" | "ne" | "e" | "se" | "s" | "sw" | "w";
+
+export type MarginBounds = {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+};

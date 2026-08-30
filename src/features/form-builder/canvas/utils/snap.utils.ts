@@ -1,4 +1,8 @@
-import type { CanvasField, FieldResizeChange } from "../types/canvas.types";
+import type {
+  CanvasField,
+  FieldResizeChange,
+  MarginBounds,
+} from "../types/canvas.types";
 import { FIELD_DEFINITIONS_MAP } from "../../constants/fields.config";
 import { SNAP_THRESHOLD } from "../../constants/form.constants";
 import { MIN_FIELD_SIZE, type ResizeHandle } from "../../domain/geometry";
@@ -20,12 +24,13 @@ export type ResizeSnapResult = {
 };
 
 /**
- * Thu thập tất cả các đường gióng mục tiêu trên Canvas
+ * Thu thập tất cả các đường gióng mục tiêu trên Canvas (mép canvas, lề trang và các phần tử khác)
  */
 function getTargetGuideLines(
   otherFields: CanvasField[],
   canvasSize: { width: number; height: number },
   sourceFieldId?: string,
+  margins?: MarginBounds,
 ) {
   const targetXLines = new Set<number>();
   const targetYLines = new Set<number>();
@@ -39,6 +44,22 @@ function getTargetGuideLines(
   targetYLines.add(0);
   targetYLines.add(canvasSize.height / 2);
   targetYLines.add(canvasSize.height);
+
+  // Thêm các đường gióng của Lề trang (Margin)
+  if (margins) {
+    if (margins.left > 0) {
+      targetXLines.add(margins.left);
+    }
+    if (margins.right > 0) {
+      targetXLines.add(canvasSize.width - margins.right);
+    }
+    if (margins.top > 0) {
+      targetYLines.add(margins.top);
+    }
+    if (margins.bottom > 0) {
+      targetYLines.add(canvasSize.height - margins.bottom);
+    }
+  }
 
   // Thêm các đường gióng từ các field khác trên Canvas
   for (const field of otherFields) {
@@ -71,11 +92,13 @@ export function calculateSnapAndGuides(
   canvasSize: { width: number; height: number },
   sourceFieldId?: string,
   threshold = SNAP_THRESHOLD,
+  margins?: MarginBounds,
 ): SnapResult {
   const { targetXLines, targetYLines } = getTargetGuideLines(
     otherFields,
     canvasSize,
     sourceFieldId,
+    margins,
   );
 
   let snappedX = proposed.x;
@@ -145,11 +168,13 @@ export function calculateResizeSnapAndGuides(
   canvasSize: { width: number; height: number },
   sourceFieldId?: string,
   threshold = SNAP_THRESHOLD,
+  margins?: MarginBounds,
 ): ResizeSnapResult {
   const { targetXLines, targetYLines } = getTargetGuideLines(
     otherFields,
     canvasSize,
     sourceFieldId,
+    margins,
   );
 
   let newX = proposedBounds.position.x;

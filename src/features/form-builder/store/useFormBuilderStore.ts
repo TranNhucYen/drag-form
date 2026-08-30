@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import { PAGE_PRESETS } from "../constants/form.constants";
-import type { Orientation, PageSize } from "../types/formBuilder.types";
+import type {
+  Orientation,
+  PageMargins,
+  PageSize,
+} from "../types/formBuilder.types";
 
 export type PagePresetKey = keyof typeof PAGE_PRESETS;
 
@@ -8,19 +12,38 @@ export interface FormBuilderState {
   // Cấu hình trang in (Page Settings)
   pageSizePreset: PagePresetKey;
   orientation: Orientation;
+  margins: PageMargins;
 
   // Actions cập nhật
   setPageSizePreset: (preset: PagePresetKey) => void;
   setOrientation: (orientation: Orientation) => void;
+  setMargins: (margins: Partial<PageMargins>) => void;
+  setMarginValue: (key: keyof PageMargins, value: string) => void;
 }
 
 export const useFormBuilderStore = create<FormBuilderState>((set) => ({
   pageSizePreset: "A4",
   orientation: "PORTRAIT",
+  margins: {
+    top: "20",
+    bottom: "20",
+    left: "20",
+    right: "20",
+  },
 
   setPageSizePreset: (preset) => set({ pageSizePreset: preset }),
 
   setOrientation: (orientation) => set({ orientation }),
+
+  setMargins: (newMargins) =>
+    set((state) => ({
+      margins: { ...state.margins, ...newMargins },
+    })),
+
+  setMarginValue: (key, value) =>
+    set((state) => ({
+      margins: { ...state.margins, [key]: value },
+    })),
 }));
 
 /**

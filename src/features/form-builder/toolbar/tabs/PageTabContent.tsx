@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import { EditableSelect, PageSizePopover } from "../components";
 import { MARGIN_FIELDS, MARGIN_OPTIONS } from "../constants/toolbar.constants";
@@ -7,22 +6,13 @@ import { useFormBuilderStore } from "../../store/useFormBuilderStore";
 export function PageTabContent() {
   const pageSizePreset = useFormBuilderStore((state) => state.pageSizePreset);
   const orientation = useFormBuilderStore((state) => state.orientation);
+  const margins = useFormBuilderStore((state) => state.margins);
 
   const setPageSizePreset = useFormBuilderStore(
     (state) => state.setPageSizePreset,
   );
   const setOrientation = useFormBuilderStore((state) => state.setOrientation);
-
-  const [margins, setMargins] = useState({
-    top: "20",
-    bottom: "20",
-    left: "20",
-    right: "20",
-  });
-
-  const handleMarginChange = (key: keyof typeof margins, value: string) => {
-    setMargins((prev) => ({ ...prev, [key]: value }));
-  };
+  const setMarginValue = useFormBuilderStore((state) => state.setMarginValue);
 
   return (
     <div className="flex items-center gap-2.5">
@@ -48,7 +38,7 @@ export function PageTabContent() {
             </span>
             <EditableSelect
               value={margins[key]}
-              onChange={(val) => handleMarginChange(key, val)}
+              onChange={(val) => setMarginValue(key, val)}
               options={MARGIN_OPTIONS}
               suffix="mm"
               className="h-5.5 w-[56px]"

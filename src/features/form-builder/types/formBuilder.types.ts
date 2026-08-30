@@ -27,3 +27,10 @@ export type PageSize = {
 };
 
 export type Orientation = "PORTRAIT" | "LANDSCAPE";
+
+export interface PageMargins {
+  top: string;
+  bottom: string;
+  left: string;
+  right: string;
+}
