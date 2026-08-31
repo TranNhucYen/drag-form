@@ -7,7 +7,7 @@ import type {
   MarginBounds,
 } from "./types/canvas.types";
 import { useFieldResize } from "./hooks";
-import { ResizeHandles } from "./components";
+import { FieldContextMenu, ResizeHandles } from "./components";
 import type { AlignmentGuide } from "./utils";
 
 type FormFieldShellProps = {
@@ -110,33 +110,34 @@ export function FormFieldShell({
   });
 
   return (
-    <div
-      ref={setShellRef}
-      data-field-id={id}
-      onClick={handleClick}
-      style={{
-        position: "absolute",
-        left: position.x,
-        top: position.y,
-        visibility: isDragging ? "hidden" : "visible",
-        outline: isColliding
-          ? "1px dashed red"
-          : isSelected
-            ? "1px dashed #2563eb"
-            : undefined,
-        outlineOffset: "2px",
-        width: controlledSize?.width,
-        height: controlledSize?.height,
-        boxSizing: "border-box",
-      }}
-    >
-      <div className="h-full w-full">
-        {children}
-      </div>
+    <FieldContextMenu fieldId={id}>
+      {/* field shell trên canvas */}
+      <div
+        ref={setShellRef}
+        data-field-id={id}
+        onClick={handleClick}
+        style={{
+          position: "absolute",
+          left: position.x,
+          top: position.y,
+          visibility: isDragging ? "hidden" : "visible",
+          outline: isColliding
+            ? "1px dashed red"
+            : isSelected
+              ? "1px dashed #2563eb"
+              : undefined,
+          outlineOffset: "2px",
+          width: controlledSize?.width,
+          height: controlledSize?.height,
+          boxSizing: "border-box",
+        }}
+      >
+        <div className="h-full w-full">{children}</div>
 
-      {allowResize && isSelected && !isDragging && (
-        <ResizeHandles type={type} onResizeStart={startResize} />
-      )}
-    </div>
+        {allowResize && isSelected && !isDragging && (
+          <ResizeHandles type={type} onResizeStart={startResize} />
+        )}
+      </div>
+    </FieldContextMenu>
   );
 }
