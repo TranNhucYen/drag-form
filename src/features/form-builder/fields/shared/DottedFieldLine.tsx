@@ -1,16 +1,50 @@
-import type React from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { DotDecoration } from "./DotDecoration";
+import { InputOverlay } from "./InputOverlay";
 
 export type DottedFieldLineProps = {
   label: string;
   value?: string;
   width?: number;
-  className?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
+  onLabelSave?: (newLabel: string) => void;
 };
 
-export function FieldLabel({ label }: { label: string }) {
-  return <span>{label}: </span>;
+export function FieldLabel({
+  label,
+  isEditing,
+  onLabelChange,
+  onSubmit,
+  onCancel,
+  inputRef,
+}: {
+  label: string;
+  isEditing: boolean;
+  onLabelChange: (val: string) => void;
+  onSubmit: () => void;
+  onCancel: () => void;
+  inputRef: React.RefObject<HTMLInputElement | null>;
+}) {
+  return (
+    <span className="shrink-0">
+      <span className="relative inline-block min-w-6">
+        {/* Thẻ span giúp có dãn theo text người dùng nhập */}
+        <span className={`select-none whitespace-pre ${isEditing ? "invisible" : ""}`}>
+          {label || " "}
+        </span>
+        {isEditing && (
+          <InputOverlay
+            value={label}
+            onChange={onLabelChange}
+            onSubmit={onSubmit}
+            onCancel={onCancel}
+            inputRef={inputRef}
+          />
+        )}
+      </span>
+      <span>: </span>
+    </span>
+  );
 }
 
 export function FieldValue({ value }: { value?: string }) {
@@ -29,23 +63,69 @@ export function FieldValue({ value }: { value?: string }) {
 }
 
 /**
- * DottedFieldLine: Khung hiển thị dùng chung chuẩn cho các trường dạng dòng kẻ chấm (Text, Number, Date, Select).
+ * DottedFieldLine: Khung hiển thị dùng chung chuẩn cho các trường dạng dòng kẻ chấm (Text, Number, Date, Select)
+ * Hỗ trợ nhấp đúp vào bất kỳ đâu trên dòng để chỉnh sửa trực tiếp nhãn
  */
 export function DottedFieldLine({
-  label,
+  label: initialLabel,
   value,
   width,
-  className = "",
   children,
+  onLabelSave,
 }: DottedFieldLineProps) {
+  const [label, setLabel] = useState(initialLabel);
+  const [isEditing, setIsEditing] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setLabel(initialLabel);
+  }, [initialLabel]);
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      const input = inputRef.current;
+      input.focus();
+      const length = input.value.length;
+      input.setSelectionRange(length, length);
+
+      requestAnimationFrame(() => {
+        input.setSelectionRange(length, length);
+      });
+    }
+  }, [isEditing]);
+
+  const handleDoubleClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setIsEditing(true);
+  };
+
+  const handleSubmit = () => {
+    setIsEditing(false);
+    onLabelSave?.(label);
+  };
+
+  const handleCancel = () => {
+    setLabel(initialLabel);
+    setIsEditing(false);
+  };
+
   return (
     <span
       style={width !== undefined ? { width: "100%" } : undefined}
-      className={`relative inline-flex items-baseline whitespace-nowrap overflow-hidden ${
-        width === undefined ? "w-max" : "w-full"
-      } ${className}`}
+      onDoubleClick={handleDoubleClick}
+      className={`
+        relative inline-flex items-baseline whitespace-nowrap overflow-hidden select-none cursor-text 
+        ${width === undefined ? "w-max" : "w-full"}`
+      }
     >
-      <FieldLabel label={label} />
+      <FieldLabel
+        label={label}
+        isEditing={isEditing}
+        onLabelChange={setLabel}
+        onSubmit={handleSubmit}
+        onCancel={handleCancel}
+        inputRef={inputRef}
+      />
       <span className="relative inline-block min-w-0 flex-1 overflow-hidden leading-[1.25]">
         <DotDecoration />
         <FieldValue value={value} />

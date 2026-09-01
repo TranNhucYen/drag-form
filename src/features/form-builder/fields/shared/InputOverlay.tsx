@@ -9,7 +9,7 @@ export type InputOverlayProps = {
 };
 
 /**
- * InputOverlay: Khung nhập liệu đè trực tiếp lên phần tử khi người dùng kích hoạt chế độ chỉnh sửa text/value
+ * InputOverlay: Khung nhập liệu đè trực tiếp lên phần tử khi người dùng kích hoạt chế độ chỉnh sửa text/value/label
  */
 export function InputOverlay({
   value,
@@ -24,6 +24,7 @@ export function InputOverlay({
       value={value}
       onChange={(event) => onChange(event.target.value)}
       onBlur={onSubmit}
+      onDoubleClick={(event) => event.stopPropagation()}
       onKeyDown={(event) => {
         if (event.key === "Enter") {
           onSubmit();
@@ -33,7 +34,9 @@ export function InputOverlay({
           onCancel();
         }
       }}
-      className="absolute inset-0 z-30 bg-transparent p-0 leading-[1.25] text-blue-600 outline-none"
+      className="
+        absolute inset-0 z-30 m-0 border-none bg-transparent p-0 
+        font-[inherit] text-[inherit] text-blue-600 outline-none select-text"
     />
   );
 }
