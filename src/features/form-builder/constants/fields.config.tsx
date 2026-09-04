@@ -54,7 +54,7 @@ export const FIELD_DEFINITIONS: FieldDefinition[] = [
     label: "Ngày",
     icon: <Calendar />,
     resizeMode: "horizontal",
-    defaultSize: { width: 260, height: 24 },
+    defaultSize: { width: 300, height: 24 },
   },
   {
     type: "select",
