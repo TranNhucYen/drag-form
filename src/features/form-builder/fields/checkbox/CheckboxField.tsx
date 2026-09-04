@@ -1,44 +1,17 @@
-import { useEffect, useRef, useState } from "react";
 import type { FieldProps } from "../types/field.types";
 import { InputOverlay } from "../shared/InputOverlay";
+import { useInlineEdit } from "../shared/useInlineEdit";
 
 export function CheckboxField({ label = "Xác nhận" }: FieldProps = {}) {
-  const [labelText, setLabelText] = useState(label);
-  const [prevLabel, setPrevLabel] = useState(label);
-  const [isEditing, setIsEditing] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  if (label !== prevLabel) {
-    setPrevLabel(label);
-    setLabelText(label);
-  }
-
-  useEffect(() => {
-    if (isEditing && inputRef.current) {
-      const input = inputRef.current;
-      input.focus();
-      const length = input.value.length;
-      input.setSelectionRange(length, length);
-
-      requestAnimationFrame(() => {
-        input.setSelectionRange(length, length);
-      });
-    }
-  }, [isEditing]);
-
-  const handleDoubleClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    setIsEditing(true);
-  };
-
-  const handleSubmit = () => {
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => {
-    setLabelText(label);
-    setIsEditing(false);
-  };
+  const {
+    value: labelText,
+    setValue: setLabelText,
+    isEditing,
+    inputRef,
+    handleDoubleClick,
+    handleSubmit,
+    handleCancel,
+  } = useInlineEdit(label);
 
   return (
     <div

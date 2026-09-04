@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import { DotDecoration } from "./DotDecoration";
 import { InputOverlay } from "./InputOverlay";
+import { useInlineEdit } from "./useInlineEdit";
 
 export type DottedFieldLineProps = {
   label: string;
@@ -73,41 +74,15 @@ export function DottedFieldLine({
   children,
   onLabelSave,
 }: DottedFieldLineProps) {
-  const [label, setLabel] = useState(initialLabel);
-  const [isEditing, setIsEditing] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    setLabel(initialLabel);
-  }, [initialLabel]);
-
-  useEffect(() => {
-    if (isEditing && inputRef.current) {
-      const input = inputRef.current;
-      input.focus();
-      const length = input.value.length;
-      input.setSelectionRange(length, length);
-
-      requestAnimationFrame(() => {
-        input.setSelectionRange(length, length);
-      });
-    }
-  }, [isEditing]);
-
-  const handleDoubleClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    setIsEditing(true);
-  };
-
-  const handleSubmit = () => {
-    setIsEditing(false);
-    onLabelSave?.(label);
-  };
-
-  const handleCancel = () => {
-    setLabel(initialLabel);
-    setIsEditing(false);
-  };
+  const {
+    value: label,
+    setValue: setLabel,
+    isEditing,
+    inputRef,
+    handleDoubleClick,
+    handleSubmit,
+    handleCancel,
+  } = useInlineEdit(initialLabel, onLabelSave);
 
   return (
     <span
